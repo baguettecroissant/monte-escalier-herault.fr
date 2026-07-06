@@ -1,0 +1,104 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import StepsForm from '../components/StepsForm.astro';
+import SchemaMarkup from '../components/SchemaMarkup.astro';
+
+const title = "Monte-Escalier Courbe sur Mesure Hérault (34) | Devis & Installation";
+const description = "Guide complet pour installer un monte-escalier courbe sur mesure dans l'Hérault (34). Prix, étude technique 3D laser et solutions pour escaliers tournants.";
+
+const breadcrumbItems = [
+  { label: "Accueil", href: "/" },
+  { label: "Monte-escalier Courbe" }
+];
+
+const faqItems = [
+  {
+    q: "Qu'est-ce qu'un monte-escalier courbe ?",
+    a: "C'est un fauteuil élévateur dont le rail est fabriqué sur mesure pour suivre la trajectoire exacte d'un escalier tournant, comportant des virages, des paliers intermédiaires ou des changements de pente."
+  },
+  {
+    q: "Comment prend-on les mesures pour un escalier courbe ?",
+    a: "Un technicien qualifié se déplace à votre domicile dans l'Hérault pour effectuer un relevé photogrammétrique laser 3D au millimètre près, permettant de programmer la fabrication du rail en usine."
+  },
+  {
+    q: "Quel est le délai de fabrication d'un monte-escalier courbe ?",
+    a: "Le délai moyen entre le relevé technique 3D et l'installation est de 2 à 4 semaines, le temps requis pour fabriquer et cintrer le rail sur mesure."
+  }
+];
+---
+
+<Layout title={title} description={description}>
+  <SchemaMarkup
+    slot="head"
+    pageUrl="https://monte-escalier-herault.fr/monte-escalier-courbe/"
+    pageTitle={title}
+    pageDescription={description}
+    breadcrumbItems={breadcrumbItems}
+    faqItems={faqItems}
+  />
+  <Breadcrumb items={breadcrumbItems} />
+
+  <section style="padding: 50px 0 80px; background-color: var(--card-bg);">
+    <div class="container">
+      <div style="text-align: center; max-width: 800px; margin: 0 auto 50px;">
+        <span class="badge-pill" style="margin-bottom: 15px;">🏢 Sur Mesure &amp; Précision</span>
+        <h1 style="font-family: var(--font-heading); font-size: 36px; font-weight: 800; color: var(--primary); margin-bottom: 15px;">
+          Le Monte-Escalier Courbe dans l'Hérault (34)
+        </h1>
+        <p style="font-size: 18px; color: var(--text-muted); line-height: 1.6;">
+          Les villas méditerranéennes et mas anciens de l'Hérault comportent fréquemment des escaliers tournants, avec paliers intermédiaires ou en colimaçon. L'installation d'un monte-escalier courbe sur mesure est la solution idéale pour préserver votre mobilité.
+        </p>
+      </div>
+
+      <div class="two-column-layout" style="align-items: start;">
+        <!-- Left: Content Guide -->
+        <div style="font-size: 18px; line-height: 1.7; color: var(--text);">
+          <h2 style="font-size: 24px; font-weight: 800; color: var(--primary); margin-top: 30px; margin-bottom: 15px; border-bottom: 2px solid var(--border-color); padding-bottom: 8px;">
+            1. Le sur-mesure au millimètre près : Relevé 3D Laser
+          </h2>
+          <p style="margin-bottom: 15px;">
+            Contrairement à un escalier droit qui utilise des rails droits standardisés, un escalier courbe exige un rail cintré de manière unique en usine. 
+            Le technicien partenaire du 34 utilise un trépied équipé d'un système photogrammétrique ou d'un scanner laser 3D. Cette technologie prend des centaines de points de mesure de chaque marche, de l'inclinaison de la pente et des obstacles éventuels (murs, portes).
+          </p>
+          <p style="margin-bottom: 15px;">
+            Cette modélisation numérique élimine toute erreur humaine de cintrage et garantit que le rail sera posé au plus près du mur ou de la rampe, libérant le maximum de passage pour les autres résidents de la maison.
+          </p>
+
+          <h2 style="font-size: 24px; font-weight: 800; color: var(--primary); margin-top: 35px; margin-bottom: 15px; border-bottom: 2px solid var(--border-color); padding-bottom: 8px;">
+            2. Choix du rail : Monorail ou Double rail ?
+          </h2>
+          <p style="margin-bottom: 15px;">
+            Il existe deux types de systèmes de guidage pour les escaliers courbes :
+          </p>
+          <ul style="padding-left: 20px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px;">
+            <li><strong>Le Double Rail (Bi-tube) :</strong> Deux tubes d'acier superposés. C'est le système le plus robuste et le plus traditionnel, idéal pour les courbes serrées et le franchissement de plusieurs étages.</li>
+            <li><strong>Le Monorail (Mono-tube) :</strong> Un seul tube d'acier, plus discret visuellement. Il s'intègre de manière très esthétique et moderne, mais son coût de fabrication est souvent de 10% à 15% supérieur en raison de sa complexité d'ingénierie.</li>
+          </ul>
+
+          <h2 style="font-size: 24px; font-weight: 800; color: var(--primary); margin-top: 35px; margin-bottom: 15px; border-bottom: 2px solid var(--border-color); padding-bottom: 8px;">
+            3. Budget et Aides Financières Hérault (34)
+          </h2>
+          <p style="margin-bottom: 15px;">
+            Le prix d'un monte-escalier courbe dans l'Hérault se situe généralement entre **5 500 € et 11 000 € TTC posé** en 2026. Ce tarif inclut la fabrication sur mesure du rail, la fourniture du fauteuil motorisé et l'installation complète par des techniciens certifiés.
+          </p>
+          <p style="margin-bottom: 20px;">
+            Plusieurs aides peuvent substantiellement réduire votre reste à charge : l'aide nationale MaPrimeAdapt' de l'Anah (finançant 50% à 70% HT), l'APA 34 attribuée par le Conseil Départemental de l'Hérault et le crédit d'impôt de 25%.
+          </p>
+
+          <div style="background: var(--primary-light); border: 2px solid var(--border-color); padding: 25px; border-radius: var(--radius-md); margin-top: 40px;">
+            <h3 style="font-size: 20px; font-weight: 800; color: var(--primary); margin-bottom: 15px;">💡 Bon à savoir pour l'installation</h3>
+            <p style="margin: 0; font-size: 16px; line-height: 1.6;">
+              La pose d'un monte-escalier courbe est réalisée en une seule journée. Les techniciens fixent les supports de rail directement sur les marches de votre escalier, évitant ainsi de toucher aux cloisons ou au papier peint. Le système fonctionne sur batteries 24V rechargeables, garantissant un fonctionnement continu même en cas de coupure électrique d'urgence.
+            </p>
+          </div>
+        </div>
+
+        <!-- Right: Form -->
+        <div>
+          <StepsForm />
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
