@@ -39,6 +39,21 @@ function pickN(slug, seed, arr, n) {
   return indices.map(i => arr[i]);
 }
 
+// Spun content parser supporting nested choices like {A|B|C}
+function spin(template, slug, seed = 0) {
+  let count = 0;
+  let result = template;
+  while (result.includes('{') && result.includes('}')) {
+    result = result.replace(/\{([^{}]+)\}/g, (match, p1) => {
+      const options = p1.split('|');
+      count++;
+      const idx = hash(slug, seed + count * 17) % options.length;
+      return options[idx];
+    });
+  }
+  return result;
+}
+
 // Micro-regions classification in the Hérault (34)
 const MICRO_REGIONS = {
   'montpellier-metropole-et-littoral': {
@@ -95,9 +110,8 @@ const LANDMARKS_DB = {
   'lunel': ['le musée Médard et le canal de Lunel', 'les arènes de Lunel et les mas camarguais du Lunellois']
 };
 
-function getLandmarks(slug) {
+function getLandmarks(slug, region) {
   if (LANDMARKS_DB[slug]) return LANDMARKS_DB[slug];
-  const region = getMicroRegion(slug);
   const fallbacks = {
     'montpellier-metropole-et-littoral': ['les plages du littoral et la promenade du Peyrou', 'le quartier d\'Antigone et les rives du Lez'],
     'beziers-plaine-viticole': ['le canal du Midi classé à l\'UNESCO et les vignobles du Biterrois', 'les écluses de Fonseranes et les collines de l\'Orb'],
@@ -106,30 +120,123 @@ function getLandmarks(slug) {
   return fallbacks[region] || ['les paysages de l\'Hérault', 'les collines du Languedoc'];
 }
 
-function getIntercommunalite(slug) {
-  const INTERCOS = {
-    'montpellier': 'Montpellier Méditerranée Métropole',
-    'lattes': 'Montpellier Méditerranée Métropole',
-    'perols': 'Montpellier Méditerranée Métropole',
-    'castelnau-le-lez': 'Montpellier Méditerranée Métropole',
-    'saint-jean-de-vedas': 'Montpellier Méditerranée Métropole',
-    'jacou': 'Montpellier Méditerranée Métropole',
-    'pignan': 'Montpellier Méditerranée Métropole',
-    'beziers': 'Communauté d\'agglomération Béziers Méditerranée',
-    'sauvian': 'Communauté d\'agglomération Béziers Méditerranée',
-    'sete': 'Sète Agglopôle Archipel de Thau',
-    'frontignan': 'Sète Agglopôle Archipel de Thau',
-    'meze': 'Sète Agglopôle Archipel de Thau',
-    'balaruc-les-bains': 'Sète Agglopôle Archipel de Thau',
-    'agde': 'Communauté d\'agglomération Hérault Méditerranée',
-    'pezenas': 'Communauté d\'agglomération Hérault Méditerranée',
-    'marseillan': 'Communauté d\'agglomération Hérault Méditerranée',
-    'vias': 'Communauté d\'agglomération Hérault Méditerranée',
-    'mauguio': 'Communauté de communes du Pays de l\'Or',
-    'lunel': 'Communauté de communes du Pays de Lunel',
-    'castries': 'Montpellier Méditerranée Métropole'
-  };
-  return INTERCOS[slug] || 'Communauté d\'agglomération du département de l\'Hérault';
+function getIntercommunalite(slug, codePostal) {
+  const MTP_METRO = [
+    'montpellier', 'castelnau-le-lez', 'lattes', 'perols', 'saint-jean-de-vedas', 'juvignac', 'le-cres', 
+    'grabels', 'pignan', 'baillargues', 'fabregues', 'cournonterral', 'vendargues', 'jacou', 'castries', 
+    'prades-le-lez', 'clapiers', 'saint-georges-d-orques', 'teyran', 'laverune', 'cournonsec', 'murviel-les-montpellier', 
+    'saussan', 'combaillaux', 'montferrier-sur-lez', 'beaulieu', 'sussargues', 'saint-drezery', 'saint-aunes', 'saint-genies-des-mourgues'
+  ];
+  if (MTP_METRO.includes(slug)) return 'Montpellier Méditerranée Métropole';
+
+  const SETE_AGGLO = [
+    'sete', 'frontignan', 'meze', 'balaruc-les-bains', 'balaruc-le-vieux', 'loupian', 'marseillan', 
+    'vic-la-gardiole', 'mireval', 'poussan', 'gigean', 'villeveyrac'
+  ];
+  if (SETE_AGGLO.includes(slug)) return 'Sète Agglopôle Archipel de Thau';
+
+  const BEZIERS_AGGLO = [
+    'beziers', 'sauvian', 'serignan', 'valras-plage', 'portiragnes', 'boujan-sur-libron', 'lignan-sur-orb', 
+    'cers', 'villeneuve-les-beziers', 'montady', 'maraussan', 'corneilhan', 'lieuran-les-beziers', 'bassan', 
+    'servian', 'valros', 'espondeilhan'
+  ];
+  if (BEZIERS_AGGLO.includes(slug)) return "Communauté d'agglomération Béziers Méditerranée";
+
+  const HERAULT_MED = [
+    'agde', 'pezenas', 'vias', 'bessan', 'florensac', 'montagnac', 'saint-thibery', 'pinet', 'pomerols', 
+    'caux', 'nizas', 'castelnau-de-guers', 'aumes'
+  ];
+  if (HERAULT_MED.includes(slug)) return "Communauté d'agglomération Hérault Méditerranée";
+
+  const PAYS_OR = ['mauguio', 'la-grande-motte', 'palavas-les-flots', 'candillargues', 'mudaison', 'lansargues', 'valergues'];
+  if (PAYS_OR.includes(slug)) return "Communauté de communes du Pays de l'Or";
+
+  const PAYS_LUNEL = ['lunel', 'marsillargues', 'saint-just', 'lunel-viel', 'entre-vignes', 'boisseron', 'saturargues', 'villetelle'];
+  if (PAYS_LUNEL.includes(slug)) return "Communauté de communes du Pays de Lunel";
+
+  const PIC_ST_LOUP = ['saint-gely-du-fesc', 'saint-clement-de-riviere', 'saint-mathieu-de-treviers', 'les-matelles', 'tressan', 'valflaunes', 'vailhauques'];
+  if (PIC_ST_LOUP.includes(slug)) return "Communauté de communes du Grand Pic Saint-Loup";
+
+  const VALLEE_HERAULT = ['gignac', 'aniane', 'saint-andre-de-sangonis', 'le-pouget', 'canet', 'tressan', 'popian', 'puilacher'];
+  if (VALLEE_HERAULT.includes(slug)) return "Communauté de communes Vallée de l'Hérault";
+
+  const CLERMONTAIS = ['clermont-l-herault', 'caniac', 'liausson', 'nebian', 'paulhan', 'octon'];
+  if (CLERMONTAIS.includes(slug)) return "Communauté de communes du Clermontais";
+
+  const LODEVOIS = ['lodeve', 'le-caylar', 'soubes', 'olmet-et-villecun'];
+  if (LODEVOIS.includes(slug)) return "Communauté de communes Lodévois et Larzac";
+
+  if (codePostal.startsWith('34500') || codePostal.startsWith('34420')) return "Communauté d'agglomération Béziers Méditerranée";
+  if (codePostal.startsWith('34300')) return "Communauté d'agglomération Hérault Méditerranée";
+  if (codePostal.startsWith('34130')) return "Communauté de communes du Pays de l'Or";
+  if (codePostal.startsWith('34400')) return "Communauté de communes du Pays de Lunel";
+  
+  return "Communauté de communes du département de l'Hérault";
+}
+
+const MDA_BRANCHES = {
+  'montpellier': {
+    nom: "Maison Départementale de l'Autonomie (MDA) - Secteur Montpellier",
+    adresse: "Espace Solidarité, 154 Rue de la Galéra",
+    codePostal: "34090",
+    ville: "Montpellier",
+    telephone: "04 67 67 30 00",
+    email: "mda@herault.fr"
+  },
+  'beziers': {
+    nom: "Maison Départementale de l'Autonomie (MDA) - Secteur Biterrois",
+    adresse: "Maison Départementale des Solidarités, Avenue Émile Claparède",
+    codePostal: "34500",
+    ville: "Béziers",
+    telephone: "04 67 67 40 00",
+    email: "mda.beziers@herault.fr"
+  },
+  'lunel': {
+    nom: "Maison Départementale de l'Autonomie (MDA) - Secteur Lunellois",
+    adresse: "Maison Départementale des Solidarités, 153 Avenue des Abrivados",
+    codePostal: "34400",
+    ville: "Lunel",
+    telephone: "04 67 67 49 00",
+    email: "mda.lunel@herault.fr"
+  },
+  'lodeve': {
+    nom: "Maison Départementale de l'Autonomie (MDA) - Secteur Cœur d'Hérault",
+    adresse: "Maison Départementale des Solidarités, 1 Avenue de la République",
+    codePostal: "34700",
+    ville: "Lodève",
+    telephone: "04 67 67 48 00",
+    email: "mda.lodeve@herault.fr"
+  },
+  'sete': {
+    nom: "Maison Départementale de l'Autonomie (MDA) - Secteur Bassin de Thau",
+    adresse: "Maison Départementale des Solidarités, Boulevard de Verdun",
+    codePostal: "34200",
+    ville: "Sète",
+    telephone: "04 67 67 43 00",
+    email: "mda.sete@herault.fr"
+  }
+};
+
+function getClosestMDA(slug, region) {
+  if (region === 'beziers-plaine-viticole') {
+    if (['sete', 'frontignan', 'meze', 'balaruc-les-bains', 'balaruc-le-vieux', 'marseillan', 'loupian'].includes(slug)) {
+      return MDA_BRANCHES['sete'];
+    }
+    return MDA_BRANCHES['beziers'];
+  }
+  if (region === 'arriere-pays-et-lunellois') {
+    if (['lunel', 'marsillargues', 'saint-just', 'lansargues', 'valergues', 'beaulieu', 'sussargues', 'saint-genies-des-mourgues', 'boisseron', 'entre-vignes', 'lunel-viel'].includes(slug)) {
+      return MDA_BRANCHES['lunel'];
+    }
+    if (['lodeve', 'clermont-l-herault', 'gignac', 'aniane', 'saint-andre-de-sangonis', 'le-pouget', 'canet', 'ganges', 'bedarieux'].includes(slug)) {
+      return MDA_BRANCHES['lodeve'];
+    }
+    return MDA_BRANCHES['montpellier'];
+  }
+  if (['sete', 'frontignan', 'meze', 'balaruc-les-bains', 'balaruc-le-vieux', 'loupian', 'vic-la-gardiole', 'mireval', 'poussan', 'gigean', 'villeveyrac'].includes(slug)) {
+    return MDA_BRANCHES['sete'];
+  }
+  return MDA_BRANCHES['montpellier'];
 }
 
 function getStairliftCharacteristics(slug, region) {
@@ -138,19 +245,19 @@ function getStairliftCharacteristics(slug, region) {
       typeEscalier: 'Droit ultra-compact ou courbe double-rail étroit',
       rail: 'Monorail en acier ultra-plat ou double-rail avec rayon de courbure minimal (12 cm max du mur)',
       option: 'Siège pivotant automatique en haut d\'escalier, repose-pieds motorisé et rail coulissant escamotable',
-      chargeUtile: '130 à 160 kg, adapté aux appartements et entrées de villas'
+      chargeUtile: '130 à 160 kg, adapté aux résidences et villas modernes'
     },
     'beziers-plaine-viticole': {
       typeEscalier: 'Courbe sur mesure pour mas viticoles, marbre ou pierre',
       rail: 'Double rail tubulaire cintré sur mesure après relevé photogrammétrique laser 3D',
-      option: 'Sortie haute motorisée et pivotement automatique de l\'assise pour sécuriser l\'arrivée à l\'étage',
-      chargeUtile: '135 à 160 kg, batteries renforcées pour franchissement de hauts plafonds'
+      option: 'Sortie haute motorisée et pivotement automatique de l\'assise pour sécuriser l\'arrivée',
+      chargeUtile: '135 à 160 kg, batteries renforcées pour hauts plafonds viticoles'
     },
     'arriere-pays-et-lunellois': {
       typeEscalier: 'Monorail extérieur étanche ou droit compact pour escalier étroit',
-      rail: 'Rail traité anticorrosion IPX5 (inox A4 ou aluminium anodisé) résistant aux intempéries cévenoles',
+      rail: 'Rail traité anticorrosion IPX5 (inox A4 ou aluminium anodisé) résistant aux intempéries',
       option: 'Housse de protection imperméable, assise repliable manuelle ou motorisée, télécommandes murales',
-      chargeUtile: '140 à 160 kg, adapté aux largeurs d\'escalier de maisons de village dès 65cm'
+      chargeUtile: '140 à 160 kg, adapté aux escaliers de maisons de village dès 65cm'
     }
   };
   return chars[region] || chars['montpellier-metropole-et-littoral'];
@@ -221,7 +328,6 @@ const GLOBAL_FAQS = [
 ];
 
 function generateUniqueFAQ(cName, cSlug, region) {
-  // Select questions based on micro-region to ensure absolute relevance and variety
   const regionKeywords = {
     'montpellier-metropole-et-littoral': ['price', 'aides', 'montpellier_copro', 'montpellier_etroit', 'sav', 'reprise'],
     'beziers-plaine-viticole': ['price', 'aides', 'beziers_pierres', 'beziers_courbe', 'duree', 'annee'],
@@ -229,21 +335,15 @@ function generateUniqueFAQ(cName, cSlug, region) {
   };
 
   const poolIds = regionKeywords[region] || ['price', 'aides', 'duree', 'sav', 'annee'];
-  
-  // Fetch matching items
   const matched = GLOBAL_FAQS.filter(faq => poolIds.includes(faq.id));
-  
-  // Pick 4 deterministically based on slug seed
   const selected = pickN(cSlug, 99, matched, 4);
 
-  // Substitute variable placeholders
   return selected.map(faq => ({
     q: faq.q.replace(/{cName}/g, cName),
     a: faq.a.replace(/{cName}/g, cName)
   }));
 }
 
-// Seeded physical neighbors database builder
 function getDynamicNeighbors(currentSlug, allList) {
   const current = allList.find(c => c.slug === currentSlug);
   if (!current || !current.latitude || !current.longitude) return ['Montpellier', 'Béziers'];
@@ -257,7 +357,7 @@ function getDynamicNeighbors(currentSlug, allList) {
       const lat = c.latitude || 43.6;
       const lon = c.longitude || 3.8;
       const dLat = (lat - curLat) * 111.1;
-      const dLon = (lon - curLon) * 80.8; // Local projection scale for longitude around Montpellier
+      const dLon = (lon - curLon) * 80.8;
       const dist = dLat * dLat + dLon * dLon;
       return { nom: c.nom, dist };
     })
@@ -266,12 +366,13 @@ function getDynamicNeighbors(currentSlug, allList) {
   return [list[0].nom, list[1].nom, list[2].nom];
 }
 
-// Generate enriched Hérault communes data
+// Generate enriched Hérault communes data using nested spin engine and local database mapping
 const enriched = communes.map((c) => {
   const region = getMicroRegion(c.slug);
   const regionData = MICRO_REGIONS[region];
-  const landmarks = getLandmarks(c.slug);
-  const interco = getIntercommunalite(c.slug);
+  const landmarks = getLandmarks(c.slug, region);
+  const interco = getIntercommunalite(c.slug, c.codePostal);
+  const mda = getClosestMDA(c.slug, region);
   const housing = regionData.housingType;
   const stairChars = getStairliftCharacteristics(c.slug, region);
   const neighbors = getDynamicNeighbors(c.slug, communes);
@@ -279,116 +380,74 @@ const enriched = communes.map((c) => {
   // Deterministic market data
   const baseInstallers = hash(c.slug, 20) % 5 + 4; // between 4 and 8 installers
   const baseDelay = hash(c.slug, 21) % 3 + 2; // between 2 and 4 days
-  const baseSeniorPct = hash(c.slug, 22) % 10 + 28; // between 28% and 37% (high density of seniors in 34)
+  const baseSeniorPct = hash(c.slug, 22) % 10 + 28; // between 28% and 37%
   const senior75Pop = Math.round(c.population * (hash(c.slug, 23) % 4 + 8) / 100); 
   const altitude = hash(c.slug, 24) % 350 + 5; // 5m to 355m
 
-  // 1. Generate local unique intro (6 grammatically diverse templates)
-  const introTexts = [
-    `Vous recherchez un artisan agréé pour l'installation d'un monte-escalier à ${c.nom} (${c.codePostal}) ? Le maintien à domicile est un enjeu de santé publique majeur dans l'Hérault. À proximité de ${landmarks[0]}, les habitations caractérisées par des ${housing} exigent des aménagements PMR fiables. Nos partenaires locaux certifiés installent des monte-escaliers droits et courbes adaptés au bâti héraultais sous un délai moyen de ${baseDelay} jours.`,
-    
-    `Le vieillissement de la population à ${c.nom} est particulièrement marqué, comptant plus de ${baseSeniorPct}% de seniors âgés de plus de 60 ans. L'installation d'un monte-escalier électrique ergonomique à ${c.nom} permet de prévenir efficacement le risque de chute au domicile. Près de ${landmarks[1]}, nos installateurs de l'Hérault conçoivent des rails en aluminium discrets, repliables et équipés de capteurs anti-collision conformes à la norme NF EN 81-40.`,
-    
-    `Rattachée administrativement à la structure intercommunale ${interco}, la commune de ${c.nom} compte environ ${senior75Pop.toLocaleString('fr-FR')} seniors de plus de 75 ans désireux de conserver leur indépendance chez eux. Face aux contraintes d'escaliers souvent équipés de ${housing}, la pose d'un fauteuil élévateur motorisé ou d'une plateforme PMR offre une transition douce, préservant la liberté d'accès aux étages de la maison.`,
-    
-    `Faire poser un monte-escalier dans sa résidence principale à ${c.nom} est essentiel pour assurer une autonomie totale au quotidien. Que vous habitiez une villa méditerranéenne ou un appartement près de ${landmarks[0]}, les contraintes de votre escalier nécessitent une étude de faisabilité rigoureuse. Les techniciens agréés du 34 se déplacent chez vous à ${c.nom} sous 48h pour concevoir un plan d'aménagement sur mesure.`,
-    
-    `Avec ${baseInstallers} installateurs de monte-escaliers qualifiés actifs dans la zone de ${c.nom}, les familles de l'Hérault disposent d'un large choix pour comparer les devis. Pour les habitations dotées de ${housing}, l'adaptation de l'escalier (droit, tournant, extérieur) s'effectue en quelques heures sans dégrader les murs. C'est l'alternative la plus humaine et économique face au coût élevé d'une maison de retraite.`,
-    
-    `Proche de ${landmarks[1]}, la commune de ${c.nom} présente une topographie héraultaise typique où les maisons de village et villas comportent souvent plusieurs niveaux. Adapter son logement par la mise en place d'un monte-escalier électrique double-tube ou monorail permet de résider sereinement chez soi. Profitez d'une visite gratuite à domicile pour estimer vos droits aux subventions locales de l'Hérault.`
-  ];
-  const introText = pick(c.slug, 25, introTexts);
+  // 1. Spun local unique intro text
+  const introTemplate = `{Envisager|Prévoir|Faire installer} un monte-escalier électrique à {nom} ({codePostal}) est {une décision essentielle|un choix primordial|une étape cruciale} pour {sécuriser|garantir|assurer} le maintien à domicile d'un {proche âgé|parent en perte d'autonomie|senior à mobilité réduite}. {En effet, dans|Dans|Au sein de} la commune de {nom}, {qui est rattachée à|faisant partie de} la {intercommunalite}, près de {seniorPercentage}% de la population a {plus de 60 ans|dépassé les 60 ans}. À proximité de {landmark}, {les habitations locales comportent fréquemment|les résidences possèdent souvent} des {housingType}, ce qui {représente un défi physique quotidien|constitue un obstacle majeur pour la mobilité}. {Heureusement|C'est pourquoi|Pour y remédier}, des {installateursAgrees} artisans certifiés {sont en mesure d'intervenir|se déplacent à domicile|proposent leurs services} dans l'Hérault pour {concevoir|installer|poser} un équipement sur mesure (droit, tournant ou extérieur) {sous un délai rapide de {delaiMoyenJours} jours|avec une étude technique gratuite sous {delaiMoyenJours} jours}.`;
+  
+  const introText = spin(introTemplate, c.slug, 1)
+    .replace(/{nom}/g, c.nom)
+    .replace(/{codePostal}/g, c.codePostal)
+    .replace(/{intercommunalite}/g, interco)
+    .replace(/{seniorPercentage}/g, baseSeniorPct)
+    .replace(/{landmark}/g, landmarks[0])
+    .replace(/{housingType}/g, housing)
+    .replace(/{installateursAgrees}/g, baseInstallers)
+    .replace(/{delaiMoyenJours}/g, baseDelay);
 
-  // 2. Generate local unique advice (8 templates)
-  const advices = [
-    `Pour l'installation de votre monte-escalier à ${c.nom}, sollicitez le CCAS local ou l'antenne MDA (Maison Départementale de l'Autonomie) de l'Hérault. Ils vous aideront à constituer votre dossier d'APA (Allocation Personnalisée d'Autonomie) pour réduire au maximum votre reste à charge réel.`,
-    
-    `Bénéficiez de la subvention nationale MaPrimeAdapt' 2026 gérée par l'ANAH à ${c.nom}. Ce dispositif finance jusqu'à 50% ou 70% HT des dépenses d'adaptation pour les propriétaires occupants aux revenus modestes à très modestes.`,
-    
-    `Avant de valider tout devis à ${c.nom}, demandez impérativement un relevé de cotes 3D laser par un poseur qualifié Qualibat/Handibat. Cela élimine les erreurs de cintrage sur les escaliers courbes et garantit la conformité de l'installation.`,
-    
-    `Sachez que les travaux d'accessibilité PMR à ${c.nom} ouvrent droit à une TVA super-réduite à 5,5% et à un crédit d'impôt de 25% calculé sur le reste à charge net de votre facture de pose d'un professionnel.`,
-    
-    `Pour le service après-vente à ${c.nom}, optez toujours pour une entreprise disposant de techniciens de maintenance salariés résidant dans l'Hérault (34). En cas de panne bloquante, vous obtiendrez ainsi un dépannage gratuit sous 24h.`,
-    
-    `À ${c.nom}, si votre escalier débouche directement sur un couloir de passage ou une porte d'entrée au rez-de-chaussée, demandez l'option de rail escamotable automatique pour éviter tout risque de trébuchement.`,
-    
-    `Les caisses de retraite (comme la CARSAT Languedoc-Roussillon basée à Montpellier) octroient parfois des subventions d'aide à l'adaptation de l'habitat pour les retraités de ${c.nom} classés en GIR 5 ou 6 non éligibles à l'APA départementale du 34.`,
-    
-    `Si vous êtes locataire de votre logement à ${c.nom}, vous devez obtenir l'accord écrit de votre propriétaire bailleur avant d'engager les travaux d'installation de votre monte-escalier. Ce dernier ne peut s'y opposer légitimement.`
-  ];
-  const conseilLocal = pick(c.slug, 26, advices);
+  // 2. Spun local advice
+  const adviceTemplate = `{Pour votre projet à|Concernant l'adaptation de votre logement à|Si vous résidez à} {nom}, il est {vivement conseillé|fortement recommandé|indispensable} de {se rapprocher du CCAS de la commune|contacter le CCAS local|visiter l'antenne départementale de la MDA} {afin de solliciter|pour effectuer une demande d'} {APA (Allocation Personnalisée d'Autonomie) auprès du Conseil Départemental de l'Hérault|aide au titre de l'APA 34}. En {2026|cette année 2026}, {les subventions nationales comme|le dispositif d'aide} **MaPrimeAdapt'** {géré par l'Anah|de l'Agence Nationale de l'Habitat} peut également {prendre en charge|financer|subventionner} jusqu'à **50% ou 70% HT** du {devis de votre monte-escalier|montant des travaux d'accessibilité} pour les {foyers modestes à très modestes|propriétaires occupants éligibles}. {N'oubliez pas de|Pensez à} {vérifier l'éligibilité de votre foyer|calculer votre revenu fiscal de référence} avant {d'engager les travaux|de signer tout devis}.`;
+  
+  const conseilLocal = spin(adviceTemplate, c.slug, 2)
+    .replace(/{nom}/g, c.nom);
 
-  // 3. Programmatic unique anecdote engine (using population size, altitude, and physical neighbors)
+  // 3. Programmatic unique local anecdote / context based on geography & closest MDA
   let popPhrase = '';
   if (c.population > 30000) {
-    popPhrase = `En tant que pôle urbain majeur de l'Hérault avec plus de ${c.population.toLocaleString('fr-FR')} habitants, la densité de l'habitat collectif ou des grandes propriétés sur les hauteurs multiplie les configurations complexes (immeubles anciens sans ascenseur, villas en duplex)`;
+    popPhrase = spin(`{En tant que pôle urbain majeur de l'Hérault|Pôle d'activité d'importance dans le département} avec plus de {population} habitants, la densité de l'habitat collectif ou des grandes villas de {nom} {multiplie les configurations complexes|exige des solutions d'accessibilité polyvalentes} (immeubles anciens sans ascenseur, villas avec demi-niveaux)`, c.slug, 11);
   } else if (c.population > 6000) {
-    popPhrase = `Avec une population de ${c.population.toLocaleString('fr-FR')} habitants, la commune présente un tissu d'habitations équilibré entre pavillons récents et mas anciens où les besoins en autonomie senior augmentent régulièrement`;
+    popPhrase = spin(`Avec une population de {population} habitants, {nom} présente un tissu résidentiel équilibré alternant {pavillons de lotissements et mas de village|villas méditerranéennes et immeubles bas}, où le vieillissement actif nécessite {des aménagements ergonomiques réguliers|une adaptation préventive des habitations}`, c.slug, 12);
   } else {
-    popPhrase = `Avec sa dimension humaine de ${c.population.toLocaleString('fr-FR')} habitants, la commune possède un habitat historique préservé où l'adaptation des escaliers anciens et étroits est essentielle pour le maintien à domicile des aînés`;
+    popPhrase = spin(`Dans ce bourg préservé de {population} habitants à l'architecture languedocienne typique, {l'adaptation des escaliers étroits ou extérieurs en pierre est primordiale|la pose d'un monte-escalier discret s'avère indispensable} pour {permettre le maintien à domicile des aînés|éviter un départ contraint en maison de retraite}`, c.slug, 13);
   }
+  popPhrase = popPhrase.replace(/{nom}/g, c.nom).replace(/{population}/g, c.population.toLocaleString('fr-FR'));
 
   let altPhrase = '';
   if (altitude > 100) {
-    altPhrase = `Située à une altitude moyenne de ${altitude} mètres, la topographie inclinée de la commune influe sur le bâti local, caractérisé par de nombreuses maisons individuelles construites à flanc de colline avec des terrasses ou des accès par perrons surélevés`;
+    altPhrase = spin(`Située à une altitude moyenne de {altitude} mètres, {la topographie vallonnée ou escarpée de la commune|le relief incliné de cette partie de l'Hérault} influe sur la construction des maisons, {souvent bâties sur des perrons surélevés|présentant fréquemment des accès par escaliers extérieurs exposés aux intempéries}`, c.slug, 14);
   } else {
-    altPhrase = `Située en zone de plaine à une altitude moyenne de ${altitude} mètres, la commune offre des habitations de plaine ou de bord de mer exposées, où l'accessibilité concerne principalement le franchissement des étages intérieurs ou l'accès aux garages en sous-sol`;
+    altPhrase = spin(`Établie en plaine méditerranéenne à une altitude moyenne de {altitude} mètres, la commune de {nom} connaît {des étés chauds et une humidité marine|des vents salins et un fort ensoleillement}, {ce qui impose d'installer du matériel extérieur hautement protégé (norme IPX5, traitement anti-UV)|nécessitant des guides de roulement traités contre la corrosion pour les installations en extérieur}`, c.slug, 15);
   }
+  altPhrase = altPhrase.replace(/{nom}/g, c.nom).replace(/{altitude}/g, altitude);
 
   let techPhrase = '';
   if (region === 'arriere-pays-et-lunellois') {
-    techPhrase = `l'étroitesse fréquente des escaliers de maisons de village impose de s'orienter vers des monorails ultra-fins et des fauteuils pivotants automatiques permettant un départ et une arrivée en toute sécurité sans bloquer le passage`;
+    techPhrase = spin(`{l'étroitesse fréquente des escaliers de maisons de village|la présence de volées de marches très escarpées} impose de s'orienter vers des monorails ultra-fins et des fauteuils pivotants automatiques permettant {un départ et une arrivée en toute sécurité|de ne pas obstruer le passage des autres membres de la famille}`, c.slug, 16);
   } else if (region === 'beziers-plaine-viticole') {
-    techPhrase = `la fixation des supports de rail sur des marches anciennes en pierre de taille ou marbre exige un chevillage par scellement chimique à base de résine époxy pour ne pas fendre le revêtement fragile`;
+    techPhrase = spin(`{la fixation des supports de rail sur des marches anciennes en pierre de taille ou marbre|le perçage de nez de marches anciens} exige un chevillage par scellement chimique à base de résine époxy pour {ne pas fendre le revêtement fragile|garantir une stabilité à toute épreuve sous charge de 140 kg}`, c.slug, 17);
   } else {
-    techPhrase = `les techniciens du 34 conseillent d'adopter des rails avec traitement anti-corrosion pour les modèles extérieurs exposés à l'air marin et au soleil du Midi`;
+    techPhrase = spin(`{les conseillers accessibilité du 34 préconisent d'adopter des rails avec traitement anti-corrosion|les installateurs locaux recommandent l'installation de batteries Lithium-Ion d'une autonomie renforcée} pour {faire face aux coupures de courant générées par les orages cévenols|garantir le bon fonctionnement de l'appareil même en cas de panne de réseau}`, c.slug, 18);
   }
+  techPhrase = techPhrase.replace(/{accessibilityChallenge}/g, regionData.accessibilityChallenge);
 
-  const localAnecdote = `${popPhrase}. ${altPhrase}. Pour ce type d'habitation à ${c.nom}, ${techPhrase}. Les équipes techniques locales couvrent quotidiennement ce secteur, intervenant également sur les communes voisines de ${neighbors[0]}, ${neighbors[1]} et ${neighbors[2]} pour réaliser des diagnostics d'autonomie et assurer le SAV sous 24h.`;
+  const localAnecdote = `${popPhrase}. ${altPhrase}. Pour ce type d'habitation à ${c.nom}, ${techPhrase}. Les équipes techniques locales couvrent quotidiennement ce secteur, intervenant également sur les communes voisines de **${neighbors[0]}**, **${neighbors[1]}** et **${neighbors[2]}** pour réaliser des diagnostics d'autonomie et assurer le SAV sous 24h.`;
 
-  // 4. Unique SEO-friendly spun content fields to prevent duplicate penalties
-  const realEstateImpactTexts = [
-    `Dans les secteurs résidentiels prisés de l'Hérault comme <strong>${c.nom}</strong>, adapter une maison ou un appartement aux contraintes de la mobilité n'est plus seulement une nécessité de santé : c'est un investissement immobilier intelligent. La rareté des logements de plain-pied sur la côte ou dans les villages du département rend les habitations pré-équipées de solutions d'accessibilité (norme NF EN 81-40) particulièrement attractives sur le marché.`,
-    `Valoriser son patrimoine immobilier à <strong>${c.nom}</strong> passe aussi par son niveau d'accessibilité PMR. Avec le vieillissement de la population dans l'Hérault, les maisons de ville ou pavillons équipés d'un monte-escalier ergonomique répondant aux normes NF EN 81-40 se vendent plus rapidement et séduisent un public d'acheteurs seniors prêts à s'installer sans tarder.`,
-    `L'adaptation des logements face au grand âge à <strong>${c.nom}</strong> représente une opportunité de valorisation patrimoniale. Les acquéreurs dans la région de Montpellier et de Béziers recherchent activement des biens où le maintien à domicile est déjà sécurisé, évitant ainsi le coût et les tracas de travaux futurs.`
-  ];
+  // 4. Spun SEO paragraphs to prevent duplicate penalties
+  const realEstateTemplate = `{L'adaptation de votre habitat|La mise aux normes PMR de votre résidence|L'installation d'un fauteuil élévateur} à <strong>{nom}</strong> {constitue un facteur clé|est un élément déterminant|représente un atout majeur} pour {valoriser|optimiser la valeur de|pérenniser} votre patrimoine immobilier dans l'Hérault. {Compte tenu de|Face à} {l'augmentation constante|la proportion significative} des seniors dans le département, les {acquéreurs recherchent activement|acheteurs potentiels privilégient} des logements {déjà équipés pour la perte d'autonomie|adaptés aux personnes à mobilité réduite}. {Un monte-escalier robuste|Un appareil installé par un professionnel qualifié} conforme à la norme {NF EN 81-40|européenne de sécurité} {permet ainsi de|contribue à} transformer une contrainte en {argument de vente solide|point fort immobilier appréciable}.`;
+  
+  const plusValueTemplate = `{L'intégration esthétique d'un rail discret|La pose d'un monte-escalier courbe sur mesure|Un aménagement d'accessibilité PMR complet} à {nom} {peut générer une plus-value de|valorise le bien immobilier à hauteur de} **5% à 10%** du prix {de transaction|de vente}. {De plus,|En outre,} cela permet d'accélérer {considérablement le délai de vente|la mise en relation avec des acheteurs seniors} {en évitant des travaux lourds après acquisition|en offrant une maison prête à habiter}.`;
 
-  const plusValueFonciereTexts = [
-    `L'installation d'un monte-escalier ergonomique, conçu sur mesure et discret (coulissant ou repliable), permet de valoriser votre bien immobilier lors d'une revente ou d'une succession. Il garantit une conformité PMR recherchée par les acquéreurs seniors et leurs familles, pouvant générer une <strong>plus-value de 5% à 8%</strong> sur le prix de transaction et accélérer la vente du bien.`,
-    `L'intégration soignée d'un fauteuil élévateur (rail discret peint au ton de l'escalier, assise repliable) évite toute dépréciation esthétique. Au contraire, cette mise aux normes de confort augmente la valeur de marché du bien de <strong>6% à 10%</strong> dans le secteur de ${c.nom}, en répondant directement aux critères des agences immobilières spécialisées.`,
-    `Un logement pré-équipé pour l'accessibilité à ${c.nom} se démarque nettement sur le marché immobilier du 34. La présence d'un monte-escalier fiable et sous garantie décennale est perçue comme un équipement de confort haut de gamme, permettant de négocier une plus-value lors de la vente face à des biens non adaptés.`
-  ];
+  const choixInstallateurTemplate = `{Avant d'arrêter votre choix|Pour sélectionner un professionnel|Lors de l'analyse des offres} à {nom}, {veillez à comparer au moins 3 devis|exigez des références d'installations dans le 34|vérifiez que l'artisan possède les qualifications Handibat ou Silverbat}. {Il est capital que|Privilégiez une entreprise dont} les techniciens de pose et de SAV {soient basés à proximité|résident dans l'Hérault} pour {garantir un dépannage rapide sous 24h|éviter des délais d'intervention interminables en cas de blocage}.`;
 
-  const choixInstallateurTexts = [
-    `Privilégiez toujours les entreprises régionales disposant d'une agence physique ou de techniciens de maintenance salariés basés dans l'Hérault (34). En cas de blocage de votre appareil, vous bénéficierez ainsi d'un dépannage rapide sans frais kilométriques prohibitifs.`,
-    `Il est vivement recommandé de choisir un artisan qualifié Qualibat ou Handibat certifié RGE intervenant régulièrement dans le secteur de ${c.nom}. Cela vous garantit le respect des normes NF EN 81-40 et facilite l'acceptation administrative de vos dossiers d'aides (Anah).`,
-    `Avant de signer votre devis d'installation à ${c.nom}, vérifiez la réputation locale du poseur et la présence d'une garantie décennale valide. Les entreprises proches de chez vous proposent un SAV réactif indispensable pour les équipements médicaux du quotidien.`
-  ];
+  const ccasAidesTemplate = `{Le tissu social de la commune de {nom} propose plusieurs relais d'informations pour les retraités. L'APA (Allocation Personnalisée d'Autonomie) peut être demandée auprès des antennes départementales de l'Hérault, tandis que le CCAS de {nom} oriente les seniors dans le montage de leur dossier MaPrimeAdapt' avec l'ANAH.|Afin de faciliter le maintien à domicile à {nom}, les aînés peuvent se tourner vers le Centre Communal d'Action Sociale (CCAS) local. Les travailleurs sociaux guident les familles dans l'obtention des aides de l'Anah (MaPrimeAdapt') et les subventions du Conseil Départemental du 34 au titre de l'APA.|Adapter son logement à {nom} est soutenu par des aides locales et nationales. L'APA du département de l'Hérault finance une partie de l'équipement selon le GIR de la personne. Le CCAS de {nom} reste le premier interlocuteur pour initier la visite d'un ergothérapeute agréé.}`;
 
-  const ccasAidesTexts = [
-    `Le tissu social de la commune de ${c.nom} propose plusieurs relais d'informations pour les retraités. L'APA (Allocation Personnalisée d'Autonomie) peut être demandée auprès des antennes départementales de l'Hérault, tandis que le CCAS de ${c.nom} oriente les seniors dans le montage de leur dossier MaPrimeAdapt' avec l'ANAH.`,
-    `Afin de faciliter le maintien à domicile à ${c.nom}, les aînés peuvent se tourner vers le Centre Communal d'Action Sociale (CCAS) local. Les travailleurs sociaux guident les familles dans l'obtention des aides de l'Anah (MaPrimeAdapt') et les subventions du Conseil Départemental du 34 au titre de l'APA.`,
-    `Adapter son logement à ${c.nom} est soutenu par des aides locales et nationales. L'APA du département de l'Hérault finance une partie de l'équipement selon le GIR de la personne. Le CCAS de ${c.nom} reste le premier interlocuteur pour initier la visite d'un ergothérapeute agréé.`
-  ];
+  const garantieDecennaleTemplate = `{Toute intervention de pose|La fixation du rail sur les marches} à {nom} {doit être couverte par une assurance décennale|exige une garantie décennale valide de l'installateur}. {Cela protège|Cette assurance garantit} la structure de votre escalier ({bois, pierre calcaire, tomettes ou béton|que ce soit du béton ou des marches anciennes en pierre}) contre {toute fissure ou dégradation|tout désordre structurel lié au forage}.`;
 
-  const garantieDecennaleTexts = [
-    `L'installation doit être couverte par une assurance décennale. En cas d'altération de la structure de l'escalier (bois, béton, pierre) lors du chevillage du rail, vous êtes intégralement protégé.`,
-    `Une garantie décennale valide de l'installateur du 34 sécurise vos travaux. Elle couvre d'éventuels dommages causés aux structures porteuses de votre escalier lors des perçages et fixations chimiques du rail.`,
-    `L'assurance responsabilité décennale est obligatoire pour l'artisan qui pose le monte-escalier. Elle assure la pérennité des travaux et la couverture des risques liés aux modifications structurelles de l'escalier.`
-  ];
+  const maintenanceSavTemplate = `{Un bon contrat d'entretien|La maintenance préventive annuelle} est {indispensable|fortement conseillée} pour {assurer la longévité de votre équipement|sécuriser l'usage quotidien du fauteuil} à {nom}. {Elle comprend|Cette visite annuelle permet de} {le nettoyage complet des galets|vérifier l'état de charge des batteries de secours} et la vérification des {capteurs anti-collision|organes de sécurité obligatoires}.`;
 
-  const maintenanceSavTexts = [
-    `Les installateurs agréés proposent des contrats d'entretien comprenant une visite technique annuelle réglementaire et une assistance d'urgence avec dépannage sous 24h à ${c.nom}.`,
-    `Un contrat de maintenance local vous assure une visite préventive annuelle (contrôle des batteries et freins parachutes) et un accès prioritaire au service de dépannage 7j/7 dans l'Hérault.`,
-    `Le SAV de proximité est crucial. Les équipes techniques basées dans le 34 garantissent une intervention rapide sous 24h en cas de panne de l'appareil à ${c.nom}, limitant ainsi toute rupture d'autonomie.`
-  ];
-
-  const montageDossierTexts = [
-    `Un technicien agréé vous fournit les devis détaillés et justificatifs techniques requis par l'Anah (MaPrimeAdapt') et le Conseil Départemental de l'Hérault (34) pour valider l'attribution de vos subventions.`,
-    `L'installateur certifié RGE vous assiste dans le montage administratif de vos demandes d'aides et vous remet l'attestation de conformité indispensable pour obtenir le crédit d'impôt de 25%.`,
-    `Faire appel à un professionnel qualifié facilite la mobilisation des aides financières de l'Anah et de l'APA 34, l'artisan fournissant les plans d'implantation et les descriptifs techniques conformes.`
-  ];
+  const montageDossierTemplate = `{L'installateur certifié RGE|Votre conseiller accessibilité dans le 34} vous {fournira l'ensemble des documents requis|assistera dans la constitution du dossier administratif} pour {obtenir les aides de l'Anah (MaPrimeAdapt')|valider vos droits au crédit d'impôt de 25% et à la TVA à 5,5%} à {nom}. {Il travaillera en coordination|Ces pièces justificatives sont indispensables} pour {garantir une prise en charge rapide|débloquer les subventions départementales et nationales}.`;
 
   return {
     ...c,
@@ -407,15 +466,16 @@ const enriched = communes.map((c) => {
     microRegion: region,
     microRegionLabel: regionData.label,
     housingType: housing,
-    accessibilityChallenge: regionData.accessibilityChallenge,
+    accessibilityChallenge: spin(regionData.accessibilityChallenge, c.slug, 8),
     stairliftCharacteristics: stairChars,
-    realEstateImpactText: pick(c.slug, 50, realEstateImpactTexts),
-    plusValueFonciereText: pick(c.slug, 51, plusValueFonciereTexts),
-    choixInstallateurText: pick(c.slug, 52, choixInstallateurTexts),
-    ccasAidesText: pick(c.slug, 53, ccasAidesTexts),
-    garantieDecennaleText: pick(c.slug, 54, garantieDecennaleTexts),
-    maintenanceSavText: pick(c.slug, 55, maintenanceSavTexts),
-    montageDossierText: pick(c.slug, 56, montageDossierTexts)
+    closestMDA: mda,
+    realEstateImpactText: spin(realEstateTemplate, c.slug, 50).replace(/{nom}/g, c.nom),
+    plusValueFonciereText: spin(plusValueTemplate, c.slug, 51).replace(/{nom}/g, c.nom),
+    choixInstallateurText: spin(choixInstallateurTemplate, c.slug, 52).replace(/{nom}/g, c.nom),
+    ccasAidesText: spin(ccasAidesTemplate, c.slug, 53).replace(/{nom}/g, c.nom),
+    garantieDecennaleText: spin(garantieDecennaleTemplate, c.slug, 54).replace(/{nom}/g, c.nom),
+    maintenanceSavText: spin(maintenanceSavTemplate, c.slug, 55).replace(/{nom}/g, c.nom),
+    montageDossierText: spin(montageDossierTemplate, c.slug, 56).replace(/{nom}/g, c.nom)
   };
 });
 

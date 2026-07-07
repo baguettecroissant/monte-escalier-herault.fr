@@ -171,6 +171,29 @@ const departementLink = `https://www.herault.fr/aide/167/2-l-apa-allocation-pers
         </div>
       </div>
 
+      <!-- Maison Départementale de l'Autonomie (MDA 34) Direct Contact Info -->
+      {commune.closestMDA && (
+        <div style="margin-top: 40px; padding: 25px; background: linear-gradient(135deg, rgba(67,56,202,0.03) 0%, rgba(234,88,12,0.02) 100%); border: 2px solid var(--border-color); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px;">
+          <div style="max-width: 580px; text-align: left;">
+            <h4 style="font-family: var(--font-heading); font-size: 19px; font-weight: 800; color: var(--primary); margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
+              🏢 {commune.closestMDA.nom}
+            </h4>
+            <p style="font-size: 15px; color: var(--text-muted); margin: 0 0 12px 0; line-height: 1.55;">
+              Pour vos demandes d'APA (Allocation Personnalisée d'Autonomie) ou de PCH dans le secteur de {commune.nom}, cette antenne du Département de l'Hérault instruit votre dossier de prise en charge et coordonne le passage d'un ergothérapeute conseil.
+            </p>
+            <div style="font-size: 14px; color: var(--text); font-weight: bold; display: flex; flex-wrap: wrap; gap: 15px;">
+              <span>📍 Adresse : {commune.closestMDA.adresse}, {commune.closestMDA.codePostal} {commune.closestMDA.ville}</span>
+              <span>📞 Tél : {commune.closestMDA.telephone}</span>
+            </div>
+          </div>
+          <div>
+            <a href={departementLink} target="_blank" rel="noopener noreferrer" class="btn-primary" style="padding: 12px 22px; font-size: 14px; font-weight: 800; border-radius: 30px; display: inline-block; text-decoration: none;">
+              📄 Formulaire APA &rarr;
+            </a>
+          </div>
+        </div>
+      )}
+
       <!-- Stairlift Characteristics Detail -->
       {commune.stairliftCharacteristics && (
         <div style="margin-top: 50px; background: white; border: 2px solid var(--border-color); border-radius: var(--radius-md); padding: 30px; box-shadow: var(--shadow-sm);">
@@ -286,37 +309,51 @@ const departementLink = `https://www.herault.fr/aide/167/2-l-apa-allocation-pers
 
   <!-- Official Resources & External Links -->
   <section style="padding: 60px 0; background-color: white; border-top: 1.5px solid var(--border-color);">
-    <div class="container" style="max-width: 900px;">
+    <div class="container" style="max-width: 950px;">
       <h3 style="font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: var(--primary); margin-bottom: 25px; text-align: center;">
         📚 Ressources Officielles Accessibilité &amp; Urbanisme à {commune.nom}
       </h3>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
         <a href={inseeLink} target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 12px; background: var(--bg); border: 2px solid var(--border-color); padding: 16px 20px; border-radius: var(--radius-sm); text-decoration: none;">
           <span style="font-size: 26px;">📊</span>
           <div>
             <div style="font-weight: 800; color: var(--primary); font-size: 14.5px;">INSEE — {commune.nom}</div>
-            <div style="color: var(--text-muted); font-size: 12.5px;">Statistiques démographiques officielles</div>
+            <div style="color: var(--text-muted); font-size: 12.5px;">Données démographiques et sociales locales</div>
           </div>
         </a>
         <a href={pluLink} target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 12px; background: var(--bg); border: 2px solid var(--border-color); padding: 16px 20px; border-radius: var(--radius-sm); text-decoration: none;">
           <span style="font-size: 26px;">🗺️</span>
           <div>
             <div style="font-weight: 800; color: var(--primary); font-size: 14.5px;">Géoportail de l'Urbanisme</div>
-            <div style="color: var(--text-muted); font-size: 12.5px;">PLU &amp; Cadastre officiel à {commune.nom}</div>
+            <div style="color: var(--text-muted); font-size: 12.5px;">Cadastre et PLU officiels à {commune.nom}</div>
           </div>
         </a>
         <a href={departementLink} target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 12px; background: var(--bg); border: 2px solid var(--border-color); padding: 16px 20px; border-radius: var(--radius-sm); text-decoration: none;">
           <span style="font-size: 26px;">💶</span>
           <div>
-            <div style="font-weight: 800; color: var(--primary); font-size: 14.5px;">Allocation APA 34</div>
-            <div style="color: var(--text-muted); font-size: 12.5px;">Dossier d'aide du Département 34</div>
+            <div style="font-weight: 800; color: var(--primary); font-size: 14.5px;">Dossier APA — Hérault (34)</div>
+            <div style="color: var(--text-muted); font-size: 12.5px;">Demande d'aide à l'autonomie départementale</div>
           </div>
         </a>
         <a href="https://www.maprimerenov.gouv.fr/" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 12px; background: var(--bg); border: 2px solid var(--border-color); padding: 16px 20px; border-radius: var(--radius-sm); text-decoration: none;">
           <span style="font-size: 26px;">🏠</span>
           <div>
-            <div style="font-weight: 800; color: var(--primary); font-size: 14.5px;">MaPrimeAdapt' / ANAH</div>
-            <div style="color: var(--text-muted); font-size: 12.5px;">Simulateur d'aide nationale 2026</div>
+            <div style="font-weight: 800; color: var(--primary); font-size: 14.5px;">MaPrimeAdapt' / Anah</div>
+            <div style="color: var(--text-muted); font-size: 12.5px;">Subvention nationale d'adaptation de l'habitat</div>
+          </div>
+        </a>
+        <a href="https://www.adil34.org/" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 12px; background: var(--bg); border: 2px solid var(--border-color); padding: 16px 20px; border-radius: var(--radius-sm); text-decoration: none;">
+          <span style="font-size: 26px;">⚖️</span>
+          <div>
+            <div style="font-weight: 800; color: var(--primary); font-size: 14.5px;">ADIL de l'Hérault (ADIL 34)</div>
+            <div style="color: var(--text-muted); font-size: 12.5px;">Conseil juridique et financier gratuit sur le logement</div>
+          </div>
+        </a>
+        <a href="https://www.carsat-lr.fr/" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 12px; background: var(--bg); border: 2px solid var(--border-color); padding: 16px 20px; border-radius: var(--radius-sm); text-decoration: none;">
+          <span style="font-size: 26px;">👴</span>
+          <div>
+            <div style="font-weight: 800; color: var(--primary); font-size: 14.5px;">CARSAT Languedoc-Roussillon</div>
+            <div style="color: var(--text-muted); font-size: 12.5px;">Aides financières au bien vieillir à domicile</div>
           </div>
         </a>
       </div>
