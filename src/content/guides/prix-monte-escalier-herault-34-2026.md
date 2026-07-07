@@ -54,7 +54,44 @@ Pour les escaliers courbes, le technicien utilise un système photogrammétrique
 
 ---
 
-## 3. Comparatif des Grandes Marques de Monte-Escalier en France
+## 3. Coûts Additionnels : Options, Maintenance et Électricité
+
+### A. Le Tarif des Options Confort et Sécurité
+Pour adapter l'appareil à une pathologie spécifique (arthrose sévère, hémiplégie, déficience visuelle), plusieurs options peuvent être ajoutées au devis initial :
+- **Siège pivotant motorisé** : Permet au fauteuil de tourner automatiquement en haut de l'escalier pour que l'utilisateur descende face au palier et non au vide. (+ 600 € à 1 000 €).
+- **Repose-pieds automatique** : Se plie et se déplie de manière synchronisée avec l'assise sans avoir à se baisser. (+ 300 € à 500 €).
+- **Rail escamotable motorisé** : Idéal si le bas de l'escalier donne directement sur un couloir de passage ou une porte. Le rail se replie automatiquement pour libérer l'espace au sol. (+ 900 € à 1 400 €).
+- **Teinte de rail sur mesure** : Pour harmoniser le rail métallique à la couleur de la rampe ou du revêtement de l'escalier. (+ 250 € à 400 €).
+
+### B. Le Contrat d'Entretien Annuel et Maintenance
+Bien que les monte-escaliers domestiques ne soient pas soumis aux obligations d'entretien des ascenseurs publics, un contrôle annuel est indispensable pour garantir le bon fonctionnement des organes de sécurité (frein parachute, batteries, nettoyage des galets de guidage).
+- **Visite technique simple** : Comptez de **130 € à 180 € par an** pour un contrôle standard par un technicien de l'Hérault.
+- **Contrat d'entretien complet (avec pièces et main-d'œuvre)** : Coûte entre **200 € et 350 € par an**. Il inclut généralement le remplacement des batteries d'urgence (à changer tous les 3 à 5 ans, hors contrat comptez 150 € à 250 €) et l'assistance téléphonique 24h/24 avec déplacement prioritaire.
+
+### C. La Consommation Électrique
+Une idée reçue courante est que le monte-escalier consomme beaucoup d'électricité. En réalité, le fauteuil fonctionne sur des batteries de 24V qui se rechargent en permanence lorsqu'il est stationné sur son point de charge (en haut ou en bas). La consommation moyenne d'un monte-escalier en usage quotidien modéré (4 à 6 trajets par jour) s'élève à environ **15 à 25 kWh par an**, soit un coût d'électricité dérisoire de **4 € à 7 € par an** au tarif réglementé de 2026.
+
+---
+
+## 4. Rentabilité et Analyse comparative : Monte-Escalier vs EHPAD dans le 34
+
+Pour de nombreuses familles héraultaises, la question de l'installation se pose face à l'alternative d'une entrée en établissement spécialisé (EHPAD). Faisons le calcul financier comparatif.
+
+### A. Coût moyen d'un EHPAD dans l'Hérault
+Selon les chiffres officiels de la dépendance dans la région Occitanie, le coût moyen mensuel d'un hébergement en EHPAD dans l'Hérault s'élève à **2 400 € par mois** (tarif dépendance + hébergement), soit **28 800 € par an** de reste à charge pour la personne âgée ou ses obligés alimentaires.
+
+### B. Amortissement d'un Monte-Escalier
+Prenons le cas d'une installation sur mesure courbe dans une maison de village à Marseillan ou à Béziers :
+- **Coût d'installation initial (courbe standard)** : 6 500 € TTC.
+- **Entretien annuel (sur 3 ans)** : 450 € (150 €/an).
+- **Coût total sur 3 ans** : 6 950 €.
+- **Déduction des aides financières (MaPrimeAdapt' à 50% + Crédit d'impôt)** : Le reste à charge moyen après subventions tombe à environ **2 500 € à 3 200 €**.
+
+**Conclusion** : Le coût total d'un monte-escalier (achat, pose, entretien compris sur plusieurs années) est amorti en **moins de 2 mois** comparé à un placement en maison de retraite dans l'Hérault. C'est à la fois la solution la plus économique et celle qui préserve le mieux le bien-être psychologique des aînés en les maintenant dans leur cadre de vie familier.
+
+---
+
+## 5. Comparatif des Grandes Marques de Monte-Escalier en France
 
 Pour vous aider à choisir, voici un comparatif des marques les plus fréquemment proposées par les installateurs agréés dans l'Hérault :
 
@@ -65,7 +102,7 @@ Pour vous aider à choisir, voici un comparatif des marques les plus fréquemmen
 
 ---
 
-## 4. Les Aides Financières en Hérault (34) pour Alléger la Facture
+## 6. Les Aides Financières en Hérault (34) pour Alléger la Facture
 
 Ne financez jamais l'intégralité de votre projet sans vérifier vos droits aux subventions locales :
 - **MaPrimeAdapt' 2026** : Aide de l'ANAH qui peut financer **50% ou 70% HT** du montant total des travaux de monte-escalier selon vos ressources.

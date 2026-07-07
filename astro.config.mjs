@@ -9,6 +9,13 @@ export default defineConfig({
   adapter: cloudflare({
     imageService: 'passthrough'
   }),
+  vite: {
+    define: {
+      'process.stderr': '({ write: (msg) => console.error(msg) })',
+      'process.stdout': '({ write: (msg) => console.log(msg) })',
+      'process': '({ stderr: { write: (msg) => console.error(msg) }, stdout: { write: (msg) => console.log(msg) } })'
+    }
+  },
   integrations: [
     sitemap({
       filter: (page) => {

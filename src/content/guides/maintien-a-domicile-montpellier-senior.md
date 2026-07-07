@@ -13,29 +13,49 @@ Dans ce parcours de soins et d'autonomie, l'installation d'un monte-escalier él
 
 ---
 
-## 1. La prévention des chutes : un enjeu médical prioritaire
+## 1. La Prévention des Chutes : Un Enjeu Médical Majeur
 
-Les chutes constituent la première cause de mortalité par accident chez les personnes âgées de plus de 65 ans en France. Les escaliers représentent la zone la plus accidentogène de l'habitation, combinant des risques de perte d'équilibre, de vertige ou de faiblesse musculaire passagère.
-
-Médicalement, la pose d'un monte-escalier à Montpellier élimine ce risque à 100%. En permettant au senior de franchir les étages assis en toute sécurité, attaché par une ceinture de sécurité à 3 points, l'appareil supprime l'effort cardiaque et articulaire lié à la montée des marches. Il permet ainsi de préserver l'énergie du senior pour d'autres activités essentielles (se préparer un repas, faire sa toilette, se déplacer dans le jardin).
-
----
-
-## 2. Le monte-escalier dans le parcours de soins post-hospitalisation
-
-L'installation d'un fauteuil élévateur est fréquemment préconisée par les ergothérapeutes ou les médecins gériatres lors d'un retour à domicile après une hospitalisation (suite à une fracture du col du fémur, un AVC ou une chirurgie cardiaque). 
-
-### Le rôle de l'ergothérapeute à Montpellier :
-Avant tout aménagement, un ergothérapeute agréé par la MDA de l'Hérault (Maison Départementale de l'Autonomie) ou exerçant dans un centre hospitalier de Montpellier (CHU Lapeyronie, Clinique du Millénaire) effectue une visite à domicile. Son rôle est d'évaluer les capacités motrices du senior et de définir le cahier des charges technique :
-- Nécessité d'une assise pivotante automatique pour faciliter le transfert en haut d'escalier.
-- Emplacement idéal des télécommandes murales de palier.
-- Choix entre un monte-escalier classique ou une plateforme élévatrice PMR pour fauteuil roulant.
+Les chutes constituent la **première cause de mortalité par accident** chez les personnes âgées de plus de 65 ans en France. Elles sont responsables de plus de 100 000 hospitalisations chaque année, dont une grande partie fait suite à un accident dans les escaliers.
+- **Le syndrome post-chute** : Au-delà de la blessure physique immédiate (fracture du col du fémur, traumatisme crânien), la chute engendre un traumatisme psychologique sévère. Le senior développe une peur panique de retomber, ce qui le pousse à s'auto-limiter dans ses déplacements, accélérant ainsi la fonte musculaire (sarcopénie) et la perte définitive d'autonomie.
+- **Bénéfice cardiaque et articulaire** : Gravir des marches sollicite intensément le système cardio-respiratoire et les articulations des genoux (gonarthrose). L'utilisation d'un fauteuil élévateur supprime cet effort physique éprouvant, permettant au senior de conserver son énergie pour les activités du quotidien indispensables (préparation des repas, toilette, maintien des relations sociales).
 
 ---
 
-## 3. Financement et coordination des acteurs locaux de la santé
+## 2. Le Monte-Escalier dans le Parcours Post-Hospitalisation (Sortie de CHU)
 
-Le maintien à domicile réussi repose sur la coordination étroite entre les professionnels de santé et les financeurs locaux :
-- **L'APA 34** : Versée par le département de l'Hérault, elle intègre l'aide humaine (auxiliaires de vie) et peut cofinancer les travaux d'adaptation préconisés.
-- **Les CCAS de Montpellier Métropole** : Ils guident les familles dans la constitution des dossiers d'aide nationale MaPrimeAdapt' (ANAH) pour obtenir les accords de subvention avant le début des travaux.
-- **Les professionnels locaux de la pose** : Les techniciens basés dans le 34 assurent une pose rapide en quelques heures pour coordonner l'installation avec la date de sortie d'hospitalisation du patient.
+L'aménagement du logement est une condition *sine qua non* pour autoriser la sortie d'hospitalisation ou de convalescence d'un patient fragile :
+
+### A. Rôle Clé du CHU de Montpellier et des Cliniques Locales
+Lorsqu'un patient est hospitalisé au CHU Lapeyronie, au Centre de Gériatrie de Castelnau-le-Lez, ou à la Clinique du Millénaire, l'équipe soignante (médecins gériatres, cadres de santé, assistantes sociales) planifie le retour à domicile :
+- **Le diagnostic d'ergothérapeute** : Un ergothérapeute libéral ou de la MDA 34 (Maison Départementale de l'Autonomie) réalise un audit du logement. Si le logement possède un étage et que le patient ne peut plus gravir les marches de manière autonome et sécurisée, la recommandation d'installer un monte-escalier est immédiatement intégrée au dossier.
+- **Coordination temporelle** : Pour éviter que le patient ne doive prolonger son séjour à l'hôpital (très coûteux) ou aller en maison de repos temporaire, nos installateurs partenaires de l'Hérault proposent une étude technique sous 48 heures et une installation prioritaire en une journée pour que l'appareil soit opérationnel le jour du retour du patient.
+
+---
+
+## 3. Synergie entre Aides Humaines et Aides Techniques
+
+Un maintien à domicile réussi repose sur l'association vertueuse des technologies de l'autonomie et des professionnels de santé locaux :
+
+### A. Complémentarité avec les Auxiliaires de Vie (ADMR, Présence Verte)
+La présence d'un monte-escalier sécurise également le travail des intervenants à domicile (aides-soignants, auxiliaires de vie sociale) :
+- Ils n'ont plus à soutenir physiquement le senior dans les escaliers, éliminant ainsi les risques de chutes partagées et de troubles musculosquelettiques (TMS) pour le soignant.
+- Le transfert du senior se fait en toute sécurité grâce à l'assise pivotante automatique du fauteuil élévateur, qui tourne le siège vers le palier en haut de l'escalier.
+
+### B. Coordination via les DAC (Dispositifs d'Appui à la Coordination)
+Dans l'Hérault, les parcours de santé complexes sont coordonnés par le DAC 34. Cet organisme fait le lien entre :
+- Les infirmiers libéraux et kinésithérapeutes assurant la rééducation à domicile.
+- Le médecin traitant du patient.
+- Le Conseil Départemental pour le financement de l'APA 34 (Allocation Personnalisée d'Autonomie).
+- L'Anah pour l'attribution des subventions MaPrimeAdapt'.
+
+---
+
+## 4. Guide Complet de Sécurisation Globale du Logement Senior
+
+Pour transformer une habitation traditionnelle en un lieu de vie 100% sécurisé et adapté au grand âge, plusieurs aménagements complémentaires au monte-escalier doivent être envisagés :
+
+1. **La Salle de Bain Accessibilité** : Remplacer la baignoire par une douche de plain-pied (douche à l'italienne) avec sol antidérapant (classement PN24), siège de douche mural et barres de maintien ergonomiques.
+2. **L'Éclairage Domotique** : Installer des chemins lumineux automatiques avec détecteurs de mouvement dans le couloir et la chambre pour prévenir les chutes nocturnes (très fréquentes lors des levers pour aller aux toilettes).
+3. **La Motorisation des Ouvertures** : Motoriser les volets roulants et installer une serrure connectée pour permettre l'accès facile aux infirmiers et aides à domicile sans que le senior ait à se déplacer jusqu'à la porte.
+4. **La Téléassistance Connectée** : Équiper le senior d'un bracelet ou d'un médaillon de détection automatique de chute lourde relié à un plateau d'assistance 24h/24.
+5. **Dégager les Voies de Circulation** : Retirer tous les tapis non fixés, éliminer les fils électriques au sol et élargir les espaces entre les meubles pour permettre le passage facile d'un déambulateur ou d'un fauteuil roulant.
