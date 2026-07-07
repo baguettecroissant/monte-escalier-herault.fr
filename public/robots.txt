@@ -7,4 +7,4 @@ Disallow: /mentions-legales
 Disallow: /politique-confidentialite
 
 # Sitemap URL
-Sitemap: https://monte-escalier-bouches-du-rhone.fr/sitemap-index.xml
+Sitemap: https://monte-escalier-herault.fr/sitemap-index.xml
