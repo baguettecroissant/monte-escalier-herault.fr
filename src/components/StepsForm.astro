@@ -203,6 +203,12 @@ const { initialZip = "", initialCommune = "" } = Astro.props;
       </div>
 
       <!-- Errors alert wrapper -->
+            <div class="form-group consent-group">
+              <label class="consent-label" for="consent-phone">
+                <input type="checkbox" id="consent-phone" name="consent" value="true" required />
+                <span>J’accepte d’être contacté(e) par téléphone par ViteUnDevis.com et ses partenaires afin de qualifier ma demande de devis. <a href="/politique-confidentialite">Voir les destinataires et la politique de confidentialité</a>.</span>
+              </label>
+            </div>
       <div id="form-errors" class="alert-danger" style="display: none; margin-top: 15px;"></div>
 
       <div class="form-nav">
@@ -276,6 +282,25 @@ const { initialZip = "", initialCommune = "" } = Astro.props;
     border-radius: var(--radius-sm);
     font-size: 15px;
     font-weight: 600;
+  }
+  .consent-group {
+    margin-top: 18px;
+  }
+  .consent-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    color: var(--text-muted);
+    font-size: 12px;
+    line-height: 1.45;
+  }
+  .consent-label input {
+    flex: 0 0 auto;
+    margin-top: 3px;
+  }
+  .consent-label a {
+    color: var(--accent-color, var(--accent));
+    text-decoration: underline;
   }
 </style>
 
@@ -403,6 +428,16 @@ const { initialZip = "", initialCommune = "" } = Astro.props;
     if (formErrors) {
       formErrors.style.display = 'none';
       formErrors.innerHTML = '';
+
+    const consentCheckbox = document.getElementById('consent-phone');
+    if (!(consentCheckbox instanceof HTMLInputElement) || !consentCheckbox.checked) {
+      if (formErrors) {
+        formErrors.style.display = 'block';
+        formErrors.textContent = 'Veuillez accepter le consentement téléphonique pour continuer.';
+      }
+      return;
+    }
+    const consentTimestamp = new Date().toISOString();
     }
 
     const formData = new FormData(form as HTMLFormElement);
@@ -429,7 +464,9 @@ const { initialZip = "", initialCommune = "" } = Astro.props;
       situation: (document.getElementById('situation') as HTMLInputElement)?.value || '1',
       chauffageActuel: `Monte-escalier: ${typeEscalierLabel}, Escalier: ${matiereLabel}, Hauteur: ${etagesText}, Statut: ${statusLabel}`,
       delais: (document.getElementById('delais') as HTMLInputElement)?.value || '2',
-      pageUrl: window.location.href
+      pageUrl: window.location.href,
+      consent: true,
+      consent_timestamp: consentTimestamp
     };
 
     const step5 = document.getElementById('step-5') as HTMLElement;
